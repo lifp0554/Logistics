@@ -1,0 +1,11 @@
+**/MANIFEST.MF
+target/
+target/classes/
+.classpath
+.project
+/target/
+.settings
+logs/
+*.log
+log.txt
+

@@ -1,0 +1,6 @@
+.externalToolBuilders/
+target/
+
+.project
+.settings
+/target/

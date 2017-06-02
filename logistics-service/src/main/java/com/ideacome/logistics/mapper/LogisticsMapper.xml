@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ideacome.logistics.mapper.LogisticsMapper">
+  
+  <update id="updateShellShipping" parameterType="java.util.Map">
+		update shell_shipping
+		<set>
+	        <if test="deliveryCorpCode!=null and deliveryCorpCode!='' ">     
+	            delivery_corp_code = #{deliveryCorpCode}      
+	        </if>
+		</set>
+		where tracking_no = #{trackingNo,jdbcType=VARCHAR}
+ </update>
+  
+</mapper>

@@ -1,0 +1,536 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ideacome</groupId>
+	<artifactId>logistics-service</artifactId>
+	<version>1.0.0</version>
+	<packaging>war</packaging>
+	<name>logistics-service</name>
+	<url>http://maven.apache.org</url>
+	<repositories>
+		<repository>
+			<id>nexus</id>
+			<name>local private nexus</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>ideacome_central</id>
+			<name>ideacome repository</name>
+			<url>http://192.168.1.4:8081/nexus/content/repositories/ideacome_central</url>
+		</repository>
+		<repository>
+			<id>local-nexus</id>
+			<url>http://192.168.1.4:8081/nexus/content/repositories/ideacome_snapshot/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<!-- 集中管理各依赖包的版本信息 -->
+	<properties>
+		<slf4j.version>1.7.12</slf4j.version>
+		<logback.version>1.1.3</logback.version>
+		<spring.version>3.2.3.RELEASE</spring.version>
+		<mybatis.version>3.2.2</mybatis.version>
+		<mybatis-spring.version>1.2.2</mybatis-spring.version>
+		<rabbitmq-spring.version>1.3.9.RELEASE</rabbitmq-spring.version>
+		<mysql-connector-java.version>5.1.31</mysql-connector-java.version>
+		<freemarker.version>2.3.20</freemarker.version>
+		<jackson.version>2.4.4</jackson.version>
+		<quartz.version>2.2.2</quartz.version>
+		<dubbo.version>1.0.3</dubbo.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<junit.version>4.11</junit.version>
+		<httpclient.version>4.5.3</httpclient.version>
+		<fastjson.version>1.2.1</fastjson.version>
+		<jackson-mapper.version>1.9.13</jackson-mapper.version>
+		<xstream.version>1.4.3</xstream.version>
+		<commons-httpclient.version>3.1</commons-httpclient.version>
+		<logistics-api.version>1.0.0-SNAPSHOT</logistics-api.version>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>test</id>
+			<properties>
+				<package.environment>test</package.environment>
+				<publish>false</publish>
+			</properties>
+		</profile>
+		<profile>
+			<id>regress</id>
+			<properties>
+				<package.environment>regress</package.environment>
+				<publish>false</publish>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<package.environment>prod</package.environment>
+				<publish>false</publish>
+			</properties>
+		</profile>
+		<profile>
+			<id>qa</id>
+			<properties>
+				<package.environment>qa</package.environment>
+				<publish>false</publish>
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+	</profiles>
+	<dependencies>
+		<!-- logistics-api jar -->
+		<dependency>
+			<groupId>com.ideacome</groupId>
+			<artifactId>logistics-api</artifactId>
+			<version>${logistics-api.version}</version>
+		</dependency>
+		<!-- httpclient jar -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>${httpclient.version}</version>
+		</dependency>
+		<!-- fastjson jar -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.version}</version>
+		</dependency>
+		<!-- jackson-mapper jar -->
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>${jackson-mapper.version}</version>
+		</dependency>
+
+		<!-- xstream jar -->
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+			<version>${xstream.version}</version>
+		</dependency>
+		<!-- commons-httpclient jar -->
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>${commons-httpclient.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<!-- logback support -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-access</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+		<!-- 集成rabbitmq -->
+		<dependency>
+			<groupId>org.springframework.amqp</groupId>
+			<artifactId>spring-rabbit</artifactId>
+			<version>${rabbitmq-spring.version}</version>
+		</dependency>
+		<!-- 集成jackson:返回json格式数据 -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<!-- 集成Spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<!-- MySQL -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-connector-java.version}</version>
+		</dependency>
+		<!-- common dbcp -->
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<!-- validation -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>1.1.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.2.0.Final</version>
+		</dependency>
+		<!-- 集成mybatis -->
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${mybatis.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${mybatis-spring.version}</version>
+		</dependency>
+		<!-- HttpServletRequest和HttpServletResponse等对象都是要靠这个jar包才能使用的。 如果安装了Tomcat,这个jar包一般在tomcat安装目录\lib 
+			文件夹下面有， 当你把web项目部署到tomcat，会自动加载这个jar包来识别Serlvet一些对象。 -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- quartz framework -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+		<!-- 集成 freemarker -->
+		<dependency>
+			<groupId>org.freemarker</groupId>
+			<artifactId>freemarker</artifactId>
+			<version>${freemarker.version}</version>
+		</dependency>
+
+		<!-- added by laosan for dubbo -->
+		<dependency>
+			<groupId>cn.ideacome</groupId>
+			<artifactId>dubbo-provider</artifactId>
+			<version>${dubbo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.ideacome</groupId>
+			<artifactId>dubbo-consumer</artifactId>
+			<version>${dubbo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.ideacome</groupId>
+			<artifactId>dubbo-common</artifactId>
+			<version>${dubbo.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.ideacome</groupId>
+			<artifactId>utility</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<!-- added by laosan for dangdang cf -->
+		<dependency>
+			<groupId>com.dangdang</groupId>
+			<artifactId>config-toolkit</artifactId>
+			<version>3.1.6-RELEASE</version>
+		</dependency>
+  </dependencies>
+  <build>
+    <finalName>logistics-service</finalName>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+          <encoding>UTF-8</encoding>
+          <compilerArguments>
+            <extdirs>src\main\webapp\WEB-INF\lib</extdirs>
+          </compilerArguments>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.4.3</version>
+        <configuration>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.4</version>
+	  </plugin>
+		<plugin>
+			<groupId>com.coderplus.maven.plugins</groupId>
+			<artifactId>copy-rename-maven-plugin</artifactId>
+			<version>1.0</version>
+			<executions>
+				<execution>
+					<id>copy-file</id>
+					<phase>generate-sources</phase>
+					<goals>
+						<goal>copy</goal>
+					</goals>
+					<configuration>
+						<fileSets>
+							<fileSet>
+								<sourceFile>src/main/resources/logback-${package.environment}.xml</sourceFile>
+								<destinationFile>target/classes/logback.xml</destinationFile>
+							</fileSet>
+						</fileSets>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+		<plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <id>execution1</id>
+            <phase>generate-resources</phase>
+            <configuration>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                  classpathref="maven.plugin.classpath" />
+                <taskdef resource="net/sf/antcontrib/antlib.xml"
+                  classpathref="maven.plugin.classpath" />
+                <if>
+                  <or>
+                    <equals arg1="${package.environment}" arg2="prod" />
+                    <equals arg1="${package.environment}" arg2="test" />
+                  </or>
+                  <then>
+                    <copy
+                      file="${basedir}/src/main/resources/logback-${package.environment}.xml"
+                      tofile="${project.build.directory}/logistics-service/WEB-INF/classes/logback.xml" />
+                  </then>
+                </if>
+              </target>
+            </configuration>
+            <goals>
+              <goal>run</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>push to remote</id>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <target>
+                <taskdef name="sshexec"
+                  classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec"
+                  classpathref="maven.plugin.classpath" />
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                  classpathref="maven.plugin.classpath" />
+                <taskdef resource="net/sf/antcontrib/antlib.xml"
+                  classpathref="maven.plugin.classpath" />
+                <property name="username" value="re" />
+                <property name="password" value="10bei.cn" />
+                <if>
+                  <equals arg1="${package.environment}" arg2="qa" />
+                  <then>
+                    <property name="qa_host" value="192.168.1.8" />
+                    <property name="qa_username" value="qa" />
+
+                    <property name="qa_password" value="123456" />
+                    <echo message="Push to logistics qa test" />
+                    
+                    <sshexec host="${qa_host}"
+                        username="${qa_username}" verbose="true" port="22"
+                        password="${qa_password}" trust="yes"
+                        command="rm -rf /usr/local/apache-tomcat-7.0.77/webapps/${project.build.finalName}"
+                        failonerror="false" />
+                      <scp
+                        file="${project.build.directory}/${project.build.finalName}.war"
+                        port="22" trust="yes"
+                        todir="${qa_username}:${qa_password}@${qa_host}:/usr/local/apache-tomcat-7.0.77/webapps/">
+                      </scp>
+                    <echo
+                      message="It will be deployed in http://192.168.1.8:8080/logistics-service" />
+                  </then>
+                  <else>
+                  </else>
+                </if>
+                <if>
+                  <equals arg1="${package.environment}" arg2="test" />
+                  <then>
+                    <echo message="It will be deployed in test 121.40.222.59" />
+                    <scp
+                      file="${project.build.directory}/${project.build.finalName}.war"
+                      port="22" trust="yes"
+                      todir="logistics:123456@121.40.222.59:">
+                    </scp>
+                    <sshexec host="121.40.222.59" username="logistics"
+                      verbose="true" port="22" password="123456"
+                      trust="yes" command="/bin/bash /home/logistics/publish.sh"
+                      failonerror="false" />
+                  </then>
+                </if>
+                <if>
+                  <equals arg1="${package.environment}" arg2="regress" />
+                  <then>
+                    <echo message="It will be deployed in test 121.40.191.147" />
+                    <scp
+                      file="${project.build.directory}/${project.build.finalName}.war"
+                      port="22" trust="yes"
+                      todir="${username}:${password}@121.40.191.147:">
+                    </scp>
+                    <sshexec host="121.40.191.147" username="${username}"
+                      verbose="true" port="22" password="${password}"
+                      trust="yes" command="/bin/bash /home/re/publish.sh"
+                      failonerror="false" />
+                  </then>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.52</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-jsch</artifactId>
+            <version>1.9.4</version>
+          </dependency>
+          <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>3.2.0.201312181205-r</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant-launcher</artifactId>
+            <version>1.8.2</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.8.2</version>
+          </dependency>
+          <dependency>
+            <groupId>ant-contrib</groupId>
+            <artifactId>ant-contrib</artifactId>
+            <version>1.0b3</version>
+            <exclusions>
+              <exclusion>
+                <groupId>ant</groupId>
+                <artifactId>ant</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+        </dependencies>
+      </plugin>
+    </plugins>
+    <filters>
+      <filter>src/main/resources/config/config-${package.environment}.properties</filter>
+    </filters>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.xml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>spring/*.xml</include>
+          <include>mybatis/*.xml</include>
+          <include>logback-${package.environment}.xml</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+
+</project>
