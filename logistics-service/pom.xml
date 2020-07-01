@@ -46,7 +46,7 @@
 		<mysql-connector-java.version>5.1.31</mysql-connector-java.version>
 		<freemarker.version>2.3.20</freemarker.version>
 		<jackson.version>2.4.4</jackson.version>
-		<quartz.version>2.2.2</quartz.version>
+		<quartz.version>2.3.2</quartz.version>
 		<dubbo.version>1.0.3</dubbo.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.11</junit.version>
