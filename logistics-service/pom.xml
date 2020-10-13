@@ -49,7 +49,7 @@
 		<quartz.version>2.2.2</quartz.version>
 		<dubbo.version>1.0.3</dubbo.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<junit.version>4.11</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<httpclient.version>4.5.3</httpclient.version>
 		<fastjson.version>1.2.1</fastjson.version>
 		<jackson-mapper.version>1.9.13</jackson-mapper.version>
