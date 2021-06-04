@@ -50,7 +50,7 @@
 		<dubbo.version>1.0.3</dubbo.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<junit.version>4.11</junit.version>
-		<httpclient.version>4.5.3</httpclient.version>
+		<httpclient.version>4.5.13</httpclient.version>
 		<fastjson.version>1.2.1</fastjson.version>
 		<jackson-mapper.version>1.9.13</jackson-mapper.version>
 		<xstream.version>1.4.3</xstream.version>
